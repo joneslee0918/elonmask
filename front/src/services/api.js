@@ -18,8 +18,8 @@ const _request = (url, method = METHOD.GET, data) => {
         .then(res => res.json())
 }
 
-export const requestToken = () =>
-    _request('request-token', METHOD.GET)
+export const requestToken = (callbackUrl) =>
+    _request('request-token', METHOD.POST, { callbackUrl })
 
 export const accessToken = (oauthToken, oauthVerifier) =>
     _request('access-token', METHOD.POST, { oauthToken, oauthVerifier })

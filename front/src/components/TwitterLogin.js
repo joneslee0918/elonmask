@@ -40,7 +40,7 @@ export default function TwitterLogin(props) {
             url: ``,
             name: "Log in with Twitter"
         });
-        const requestTokenData = await requestToken();
+        const requestTokenData = await requestToken(window.location.href);
         console.log({ requestTokenData })
         if (requestTokenData.oauth_callback_confirmed === "true" && popup !== null) {
             popup.location.href = `https://api.twitter.com/oauth/authorize?oauth_token=${requestTokenData.oauth_token}`;
