@@ -94,7 +94,6 @@ app.post('/api/check-followers', async function (req, res) {
   try {
     const response = await twitter(url, data, access_token, access_token_secret)
     const followingElonMusk = response.ids.includes(44196397);
-    console.log(data, followingElonMusk);
     res.send({ followed: followingElonMusk, success: true })
   } catch (error) {
     res.send({ followed: false, error })
@@ -103,7 +102,6 @@ app.post('/api/check-followers', async function (req, res) {
 
 app.post('/api/save-user', async function (req, res) {
   const { address, twitter_name } = req.body;
-  console.log(address, twitter_name)
   fs.appendFileSync("users.csv", `${address},${twitter_name}`)
   res.send({ success: true })
 })
@@ -116,5 +114,5 @@ var server = app.listen(8000, function () {
   var host = server.address().address
   var port = server.address().port
 
-  console.log("Example app listening at http://%s:%s", host, port)
+  console.log("listening at http://%s:%s", host, port)
 })

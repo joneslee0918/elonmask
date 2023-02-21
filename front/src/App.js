@@ -3,13 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import Web3 from "web3";
 import './App.css';
 import TwitterLogin from "./components/TwitterLogin.js";
-import { checkFollow, getScreenName } from "./services/api";
+import { checkFollow, getScreenName, saveUser } from "./services/api";
 
 
 function App() {
   const { status, connect, account } = useMetaMask();
   const web3 = useRef(new (Web3)(window.ethereum)).current;
-  const [twitterUser, setTwitterUser] = useState("vaingloriousETH")
+  const [twitterUser, setTwitterUser] = useState(null)
   const [isFollowed, setIsFollowed] = useState(false)
   const [signed, setSigned] = useState(false)
   const [authTokens, setAuthTokens] = useState({})
@@ -29,12 +29,11 @@ function App() {
     const response = await getScreenName(oauth_token, oauth_token_secret).catch(console.log)
     if (response?.success) return setTwitterUser(response.screen_name)
 
-    console.log(response.error);
     alert("get verify status error");
     setIsFollowed(false);
   };
 
-  const saveUser = () => {
+  const onSuccess = () => {
     saveUser(account, twitterUser)
       .then(res => {
         alert("user saved")
@@ -53,10 +52,9 @@ function App() {
     const response = await checkFollow(twitterUser, authTokens.oauth_token, authTokens.oauth_token_secret)
       .catch(console.log)
     if (response?.success) {
-      saveUser();
+      onSuccess();
       return setIsFollowed(response.followed)
     }
-    console.log(response.error);
     alert("get verify status error");
     setIsFollowed(false);
   }
@@ -97,7 +95,7 @@ function App() {
           :
           <></>
         }
-        {/* {disabled && <div className="overlay" />} */}
+        {disabled && <div className="overlay" />}
       </div>
     )
   }
@@ -155,7 +153,7 @@ function App() {
               title={'Follow elonmusk'}
               desc={'And connect your twitter'}
               button={twitterUser ? 'verify' : 'Follow'}
-              actionComponent={() => (
+              actionComponent={twitterUser ? null : () => (
                 <TwitterLogin
                   className={'action'}
                   authCallback={authHandler}

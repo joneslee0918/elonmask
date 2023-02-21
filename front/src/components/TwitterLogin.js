@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { accessToken, requestToken } from '../services/api';
 import { openWindow, observeWindow } from "../services/window.js";
 
+var isCompleted = false;
 export default function TwitterLogin(props) {
-    const [isCompleted, setIsCompleted] = useState(false)
     const popupRef = useRef(null)
 
     const initializeProcess = () => {
@@ -12,11 +12,9 @@ export default function TwitterLogin(props) {
             window.opener.postMessage({ type: "authorized", data: { oauthToken, oauthVerifier } }, window.origin);
         } else {
             window.onmessage = async ({ data: { type, data } }) => {
-                console.log({ type, data })
-                if (type === "authorized") {
+                if (type === "authorized" && isCompleted == false) {
+                    isCompleted = true
                     const accessTokenData = await accessToken(data.oauthToken, data.oauthVerifier)
-                    console.log({ accessTokenData })
-                    setIsCompleted(true)
                     props.authCallback && props.authCallback(undefined, accessTokenData);
                     popupRef?.current && popupRef.current.close();
                 }
@@ -32,6 +30,7 @@ export default function TwitterLogin(props) {
         if (!isCompleted) {
             props.authCallback && props.authCallback("User closed OAuth popup");
         }
+        isCompleted = false;
 
     }
 
@@ -41,7 +40,6 @@ export default function TwitterLogin(props) {
             name: "Log in with Twitter"
         });
         const requestTokenData = await requestToken(window.location.href);
-        console.log({ requestTokenData })
         if (requestTokenData.oauth_callback_confirmed === "true" && popup !== null) {
             popup.location.href = `https://api.twitter.com/oauth/authorize?oauth_token=${requestTokenData.oauth_token}`;
 
