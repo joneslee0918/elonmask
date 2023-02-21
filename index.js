@@ -24,10 +24,11 @@ const parseOAuthRequestToken = (responseText) =>
   }, {});
 
 
-app.get('/api/request-token', async function (req, res) {
+app.post('/api/request-token', async function (req, res) {
+  const { callbackUrl } = req.body;
   const apiUrl = "https://api.twitter.com/oauth/request_token";
   const method = "POST"
-  const oauthSignature = requestTokenSignature({ apiUrl, method });
+  const oauthSignature = requestTokenSignature({ apiUrl, method, callbackUrl });
   // https://corsanywhere.herokuapp.com/
   const response = await fetch(apiUrl, {
     method,
