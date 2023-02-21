@@ -1,9 +1,5 @@
-interface OpenWindow {
-  url: string;
-  name?: string;
-}
 
-export const openWindow = ({ url, name }: OpenWindow) => {
+export const openWindow = ({ url, name }) => {
   const top = (window.innerHeight - 400) / 2 + window.screenY;
   const left = (window.innerWidth - 400) / 2 + window.screenX;
 
@@ -14,13 +10,8 @@ export const openWindow = ({ url, name }: OpenWindow) => {
   );
 };
 
-interface ObserveWindow {
-  popup: Window;
-  interval?: number;
-  onClose: () => void;
-}
 
-export const observeWindow = ({ popup, interval, onClose }: ObserveWindow) => {
+export const observeWindow = ({ popup, interval, onClose }) => {
   const intervalId = setInterval(() => {
     if (popup.closed) {
       clearInterval(intervalId);

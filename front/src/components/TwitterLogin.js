@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { accessToken, requestToken } from '../services/api';
-import { openWindow, observeWindow } from "../services/window.ts";
+import { openWindow, observeWindow } from "../services/window.js";
 
 export default function TwitterLogin(props) {
     const [isCompleted, setIsCompleted] = useState(false)
