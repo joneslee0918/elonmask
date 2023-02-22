@@ -55,6 +55,7 @@ function App() {
 
   const onSuccess = () => {
     if(followStatus !== FOLLOW_SATUS.FOLLOWED) return;
+    
     saveUser(account, twitterUser)
       .then(res => alert("login success and user saved"))
       .catch(err => {
