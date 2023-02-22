@@ -35,7 +35,7 @@ function App() {
   }, [account, signed])
 
   useEffect(() => {
-    if (FOLLOW_SATUS != FOLLOW_SATUS.FOLLOW) return
+    if (followStatus != FOLLOW_SATUS.FOLLOW) return
     if (!oauthToken) return;
     if (!twitterUser) return;
     verifyFolled()
