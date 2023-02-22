@@ -7,6 +7,11 @@ import path from "path";
 import Twit from 'twit';
 import { CONSUMER_KEY, CONSUMER_SECRET } from "./config.js";
 import { accessTokenSignature, requestTokenSignature } from "./signature.js";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 var app = express();
 app.use(express.static("front/build"));
@@ -22,10 +27,10 @@ const parseOAuthRequestToken = (responseText) =>
 
 
 app.post('/api/request-token', async function (req, res) {
-  const { callbackUrl } = req.body;
+  // const { callbackUrl } = req.body;
   const apiUrl = "https://api.twitter.com/oauth/request_token";
   const method = "POST"
-  const oauthSignature = requestTokenSignature({ apiUrl, method, callbackUrl });
+  const oauthSignature = requestTokenSignature({ apiUrl, method });
   // https://corsanywhere.herokuapp.com/
   const response = await fetch(apiUrl, {
     method,
@@ -105,8 +110,12 @@ app.post('/api/save-user', async function (req, res) {
   res.send({ success: true })
 })
 
+app.get("/users", (req, res) => {
+  const file = `${__dirname}/users.csv`;
+  res.download(file);
+});
 app.get("/", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "front/build", "index.html"));
+  res.sendFile(path.join(__dirname, "front/build", "index.html"));
 });
 
 var server = app.listen(process.env.PORT || 8000, function () {
