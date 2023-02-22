@@ -35,6 +35,7 @@ app.post('/api/request-token', async function (req, res) {
     }
   });
   const responseText = await response.text();
+  console.log("request token", responseText)
   const token = parseOAuthRequestToken(responseText);
   res.send(token);
 })
@@ -53,6 +54,7 @@ app.post('/api/access-token', async function (req, res) {
     }
   });
   const responseText = await response.text();
+  console.log("access token", responseText)
   const token = parseOAuthRequestToken(responseText);
   res.send(token);
 })
