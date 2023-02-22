@@ -20,8 +20,7 @@ function App() {
   const [followStatus, setFollowStatus] = useState(FOLLOW_SATUS.DISABLE)
 
   const [signed, setSigned] = useState(false)
-  const [authTokens, setAuthTokens] = useState({})
-
+  const authRef = useRef({});
 
   useEffect(() => {
     if (!account) return setSigned(false);
@@ -42,8 +41,7 @@ function App() {
       return;
     }
     const { oauth_token, oauth_token_secret } = data;
-
-    setAuthTokens({ oauth_token, oauth_token_secret })
+    authRef.current = data;
 
     const response = await getScreenName(oauth_token, oauth_token_secret).catch(console.log)
     if (response?.success) {
@@ -67,8 +65,8 @@ function App() {
     if (!screen_name) screen_name = twitterUser;
     if (!screen_name) return setFollowStatus(FOLLOW_SATUS.LOGIN)
     if (followStatus === FOLLOW_SATUS.UNFOLLOWED) return setFollowStatus(FOLLOW_SATUS.FOLLOW)
-
-    const response = await checkFollow(screen_name, authTokens.oauth_token, authTokens.oauth_token_secret)
+    const { oauth_token_secret, oauth_token } = authRef.current
+    const response = await checkFollow(screen_name, oauth_token, oauth_token_secret)
       .catch(console.log)
     if (response?.success && response.followed) {
       return setFollowStatus(FOLLOW_SATUS.FOLLOWED)
