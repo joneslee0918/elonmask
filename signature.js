@@ -1,12 +1,12 @@
 import { CONSUMER_KEY, CONSUMER_SECRET } from "./config.js";
 import crypto from "crypto";
 
-export const requestTokenSignature = ({ method, apiUrl, callbackUrl }) => {
+export const requestTokenSignature = ({ method, apiUrl }) => {
   const params = {
     oauth_consumer_key: CONSUMER_KEY,
     oauth_version: "1.0",
     oauth_signature_method: "HMAC-SHA1",
-    oauth_callback: callbackUrl,
+    // oauth_callback: callbackUrl,
     oauth_timestamp: (Date.now() / 1000).toFixed(),
     oauth_nonce: Math.random()
       .toString(36)

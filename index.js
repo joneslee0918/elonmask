@@ -30,7 +30,7 @@ app.post('/api/request-token', async function (req, res) {
   // const { callbackUrl } = req.body;
   const apiUrl = "https://api.twitter.com/oauth/request_token";
   const method = "POST"
-  const oauthSignature = requestTokenSignature({ apiUrl, method });
+  const oauthSignature = requestTokenSignature({ apiUrl, method, callbackUrl });
   // https://corsanywhere.herokuapp.com/
   const response = await fetch(apiUrl, {
     method,
@@ -40,7 +40,6 @@ app.post('/api/request-token', async function (req, res) {
     }
   });
   const responseText = await response.text();
-  console.log("request token", responseText)
   const token = parseOAuthRequestToken(responseText);
   res.send(token);
 })
@@ -59,7 +58,6 @@ app.post('/api/access-token', async function (req, res) {
     }
   });
   const responseText = await response.text();
-  console.log("access token", responseText)
   const token = parseOAuthRequestToken(responseText);
   res.send(token);
 })
