@@ -1,15 +1,12 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from "express";
+import fs from "fs";
 import fetch from 'node-fetch';
-import path, { dirname } from "path";
+import path from "path";
 import Twit from 'twit';
-import { fileURLToPath } from 'url';
 import { CONSUMER_KEY, CONSUMER_SECRET } from "./config.js";
 import { accessTokenSignature, requestTokenSignature } from "./signature.js";
-import fs from "fs"
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 var app = express();
 app.use(express.static("front/build"));
@@ -107,7 +104,7 @@ app.post('/api/save-user', async function (req, res) {
 })
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "front/build", "index.html"));
+  res.sendFile(path.join(process.cwd(), "front/build", "index.html"));
 });
 
 var server = app.listen(process.env.PORT || 8000, function () {

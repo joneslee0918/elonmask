@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
+    "build":"yarn; cd front; yarn; yarn build;",
     "start": "node index.js"
   },
   "author": "",
