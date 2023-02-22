@@ -18,9 +18,9 @@ function App() {
   const web3 = useRef(new (Web3)(window.ethereum)).current;
   const [twitterUser, setTwitterUser] = useState()
   const [followStatus, setFollowStatus] = useState(FOLLOW_SATUS.DISABLE)
+  const [oauthToken, setOauthToken] = useState(null)
 
   const [signed, setSigned] = useState(false)
-  const authRef = useRef({});
 
   useEffect(() => {
     if (!account) return setSigned(false);
@@ -28,10 +28,18 @@ function App() {
     var exists = accounts.filter(item => item.toLowerCase() === account.toLowerCase()).length > 0;
     setSigned(exists);
   }, [account])
+
   useEffect(() => {
     if (account && signed) setFollowStatus(FOLLOW_SATUS.LOGIN)
     else setFollowStatus(FOLLOW_SATUS.DISABLE)
   }, [account, signed])
+
+  useEffect(() => {
+    if (FOLLOW_SATUS != FOLLOW_SATUS.FOLLOW) return
+    if (!oauthToken) return;
+    if (!twitterUser) return;
+    verifyFolled()
+  }, [oauthToken, twitterUser, followStatus])
 
   const authHandler = async (err, data) => {
     if (err) {
@@ -41,21 +49,20 @@ function App() {
       return;
     }
     const { oauth_token, oauth_token_secret } = data;
-    authRef.current = data;
+    setOauthToken({ oauth_token, oauth_token_secret })
 
     const response = await getScreenName(oauth_token, oauth_token_secret).catch(console.log)
     if (response?.success) {
       setTwitterUser(response.screen_name)
       setFollowStatus(FOLLOW_SATUS.FOLLOW)
-      setTimeout(() => verifyFolled(response.screen_name), 1000);
       return;
     }
     setFollowStatus(FOLLOW_SATUS.LOGIN)
   };
 
   const onSuccess = () => {
-    if(followStatus !== FOLLOW_SATUS.FOLLOWED) return;
-    
+    if (followStatus !== FOLLOW_SATUS.FOLLOWED) return;
+
     saveUser(account, twitterUser)
       .then(res => alert("login success and user saved"))
       .catch(err => {
@@ -63,12 +70,10 @@ function App() {
         alert("user save error")
       })
   }
-  const verifyFolled = async (screen_name = null) => {
-    if (!screen_name) screen_name = twitterUser;
-    if (!screen_name) return setFollowStatus(FOLLOW_SATUS.LOGIN)
+  const verifyFolled = async () => {
+    if (!twitterUser) return setFollowStatus(FOLLOW_SATUS.LOGIN)
     if (followStatus === FOLLOW_SATUS.UNFOLLOWED) return setFollowStatus(FOLLOW_SATUS.FOLLOW)
-    const { oauth_token_secret, oauth_token } = authRef.current
-    const response = await checkFollow(screen_name, oauth_token, oauth_token_secret)
+    const response = await checkFollow(twitterUser, oauthToken.oauth_token, oauthToken.oauth_token_secret)
       .catch(console.log)
     if (response?.success && response.followed) {
       return setFollowStatus(FOLLOW_SATUS.FOLLOWED)
