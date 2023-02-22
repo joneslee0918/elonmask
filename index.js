@@ -110,7 +110,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "front/build", "index.html"));
 });
 
-var server = app.listen(8000, function () {
+var server = app.listen(process.env.PORT || 8000, function () {
   var host = server.address().address
   var port = server.address().port
 

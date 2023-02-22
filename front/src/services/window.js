@@ -6,7 +6,7 @@ export const openWindow = ({ url, name }) => {
   return window.open(
     url,
     name,
-    `dialog=yes,top=${top}px,left=${left},width=${400}px,height=${500}px`
+    `dialog=yes,top=${top}px,left=${left},width=${400}px,height=${700}px`
   );
 };
 

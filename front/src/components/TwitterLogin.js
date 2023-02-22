@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useRef, useEffect } from 'react'
 import { accessToken, requestToken } from '../services/api';
 import { openWindow, observeWindow } from "../services/window.js";
@@ -12,7 +13,7 @@ export default function TwitterLogin(props) {
             window.opener.postMessage({ type: "authorized", data: { oauthToken, oauthVerifier } }, window.origin);
         } else {
             window.onmessage = async ({ data: { type, data } }) => {
-                if (type === "authorized" && isCompleted == false) {
+                if (type === "authorized" && !isCompleted) {
                     isCompleted = true
                     const accessTokenData = await accessToken(data.oauthToken, data.oauthVerifier)
                     props.authCallback && props.authCallback(undefined, accessTokenData);

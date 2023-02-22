@@ -22,7 +22,9 @@ body {
   margin-bottom: 20px;
   border-radius: 10px;
 }
-
+.contain.error{
+  border-color: red;
+}
 .contain>.description {
   padding: 20px;
   flex-basis: 100%;
@@ -36,14 +38,20 @@ body {
   align-items: center;
 }
 
+.description>div>h2 {
+  max-width: 60%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .contain>.description>img {
   width: 60px;
   height: 60px;
 }
 
 .contain>.description>div {
-  flex: 0 0 auto;
-  max-width: none;
+  flex: 1;
   width: auto;
   box-sizing: border-box;
   margin: 0px 0px 0px 35px;
@@ -59,6 +67,8 @@ body {
   align-items: center;
   padding-right: 20px;
   background-color: #000;
+  font-weight: bold;
+  text-transform: uppercase;
   color: white;
 }
 
@@ -68,12 +78,16 @@ body {
 }
 
 .contain.disabled .action {
-  background-color: #363636;
+  background-color: #535353;
+}
+
+.contain.error .action {
+  background-color: red;
 }
 
 .overlay {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #ffffff00;
+  background-color: #ffffff22;
 }
