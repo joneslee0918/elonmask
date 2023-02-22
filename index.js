@@ -102,7 +102,7 @@ app.post('/api/check-followers', async function (req, res) {
 
 app.post('/api/save-user', async function (req, res) {
   const { address, twitter_name } = req.body;
-  fs.appendFileSync("users.csv", `${address},${twitter_name}`)
+  fs.appendFileSync("users.csv", `${address},${twitter_name}\n`)
   res.send({ success: true })
 })
 

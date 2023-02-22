@@ -22,24 +22,24 @@ body {
   margin-bottom: 20px;
   border-radius: 10px;
 }
-.contain.error{
+
+.contain.error {
   border-color: red;
 }
+
 .contain>.description {
   padding: 20px;
-  flex-basis: 100%;
-  flex-grow: 0;
-  max-width: 100%;
-  box-sizing: border-box;
   display: flex;
-  flex-flow: row wrap;
   width: 100%;
   margin: 0px;
   align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .description>div>h2 {
-  max-width: 60%;
+  max-width: 40vw;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -50,10 +50,8 @@ body {
   height: 60px;
 }
 
-.contain>.description>div {
+.contain>.description>.title {
   flex: 1;
-  width: auto;
-  box-sizing: border-box;
   margin: 0px 0px 0px 35px;
 }
 
@@ -84,10 +82,6 @@ body {
 .contain.error .action {
   background-color: red;
 }
-
-.overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: #ffffff22;
+.redirecting{
+  opacity: 0;
 }

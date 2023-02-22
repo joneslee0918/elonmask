@@ -1,37 +1,32 @@
-// eslint-disable-next-line
 import React, { useRef, useEffect } from 'react'
 import { accessToken, requestToken } from '../services/api';
 import { openWindow, observeWindow } from "../services/window.js";
 
-var isCompleted = false;
 export default function TwitterLogin(props) {
     const popupRef = useRef(null)
+    const isCompleted = useRef(false)
 
-    const initializeProcess = () => {
+    useEffect(() => {
         if (window.opener) {
             const [, oauthToken, oauthVerifier] = window.location.search.match(/^(?=.*oauth_token=([^&]+)|)(?=.*oauth_verifier=([^&]+)|).+$/) || [];
             window.opener.postMessage({ type: "authorized", data: { oauthToken, oauthVerifier } }, window.origin);
         } else {
             window.onmessage = async ({ data: { type, data } }) => {
-                if (type === "authorized" && !isCompleted) {
-                    isCompleted = true
+                if (type === "authorized" && !isCompleted.current) {
+                    isCompleted.current = true
                     const accessTokenData = await accessToken(data.oauthToken, data.oauthVerifier)
                     props.authCallback && props.authCallback(undefined, accessTokenData);
                     popupRef?.current && popupRef.current.close();
                 }
             };
         }
-    };
-
-    useEffect(() => {
-        initializeProcess();
-    }, [])
+    }, [props])
 
     const handleClosingPopup = () => {
-        if (!isCompleted) {
+        if (!isCompleted.current) {
             props.authCallback && props.authCallback("User closed OAuth popup");
         }
-        isCompleted = false;
+        isCompleted.current = false;
 
     }
 
