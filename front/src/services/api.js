@@ -1,6 +1,6 @@
 
-const server_url = window.location.href;
-// const server_url = 'http://localhost:8000/'
+export const server_url = `${window.location.protocol}//${window.location.host}/`;
+// export const server_url = 'http://localhost:8000/'
 
 const METHOD = {
     GET: "GET",
