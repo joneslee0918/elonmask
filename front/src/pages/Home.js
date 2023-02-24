@@ -101,8 +101,8 @@ function Home() {
           {connected &&
             <>
               <img src={'https://freenft.xyz/_next/static/media/green-check.b46832bf.svg'} alt={'CONNECTED'}
-                style={{ width: 25, height: 25, marginRight: 5 }} />
-              <h5>Connected</h5>
+                style={{ width: 20, height: 20 }} />
+              <span className="connected">Connected</span>
             </>
           }
         </div>
