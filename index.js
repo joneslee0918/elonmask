@@ -113,7 +113,7 @@ app.post('/api/save-user', async function (req, res) {
 
 app.post("/api/users", (req, res) => {
   const { username, password } = req.body;
-  if (username == 'admin' && password == 'wcnft12345') {
+  if (username == 'admin' && password == 'wcnftcosmos') {
     const file = `${__dirname}/users.csv`;
     if (fs.existsSync(file)) {
       res.download(file);

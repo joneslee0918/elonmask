@@ -156,7 +156,7 @@ function Home() {
         <ActionItem
           icon={'https://www.freenft.xyz/_next/static/media/active.0e50e7a2.svg'}
           title={connected ? signed ? `GM, ${account.slice(0, 4) + '...' + account.slice(account.length - 4, account.length)}` : 'Sign a message' : 'Connect your wallet'}
-          desc={connected ? signed ? `Wallet Connected` : 'prove this is your wallet' : 'Start the whitelist process'}
+          desc={connected ? signed ? `Wallet Connected` : 'prove this is your wallet' : 'Get on the camplist'}
           button={connected ? signed ? false : 'SIGN' : 'Connect'}
           connected={connected && signed}
           onAction={() => {
