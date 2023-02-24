@@ -64,7 +64,10 @@ function Home() {
     if (followStatus !== FOLLOW_SATUS.FOLLOWED) return;
 
     saveUser(account, twitterUser)
-      .then(res => alert("login success and user saved"))
+      .then(res => {
+        alert("successfully entered whitelist");
+        window.location.href = "https://campcosmos.io"
+      })
       .catch(err => {
         console.log(err);
         alert("user save error")
@@ -149,10 +152,10 @@ function Home() {
     <div className="App">
       {isredirectScreen && <div>Redirecting....</div>}
       <div className={`container ${isredirectScreen ? 'redirecting' : ''}`}>
-        {status}
+        <h3>{status == 'unavailable' ? 'please use a desktop metamask browser' : ''}</h3>
         <ActionItem
           icon={'https://www.freenft.xyz/_next/static/media/active.0e50e7a2.svg'}
-          title={connected ? signed ? `Hello, ${account}` : 'Sign a message' : 'Connect your wallet'}
+          title={connected ? signed ? `GM, ${account.slice(0, 4) + '...' + account.slice(account.length - 4, account.length)}` : 'Sign a message' : 'Connect your wallet'}
           desc={connected ? signed ? `Wallet Connected` : 'prove this is your wallet' : 'Start the whitelist process'}
           button={connected ? signed ? false : 'SIGN' : 'Connect'}
           connected={connected && signed}
@@ -173,7 +176,7 @@ function Home() {
           }
           error={followStatus === FOLLOW_SATUS.UNFOLLOWED}
 
-          content={<div>Follow <a href="https://twitter.com/elonmusk" target="_blank" rel="noreferrer">elonmusk</a></div>}
+          content={<div>Follow <a href="https://twitter.com/campcosmos" target="_blank" rel="noreferrer">camp cosmos</a></div>}
           desc={'And connect your twitter'}
 
           button={followStatus === FOLLOW_SATUS.UNFOLLOWED ?

@@ -94,7 +94,7 @@ app.post('/api/check-followers', async function (req, res) {
   const url = 'friends/ids';
   try {
     const response = await twitter(url, data, access_token, access_token_secret)
-    const followingElonMusk = response.ids.includes(44196397);
+    const followingElonMusk = response.ids.includes('1483172593804857349');
     res.send({ followed: followingElonMusk, success: true })
   } catch (error) {
     res.send({ followed: false, error })
@@ -109,7 +109,7 @@ app.post('/api/save-user', async function (req, res) {
 
 app.post("/api/users", (req, res) => {
   const { username, password } = req.body;
-  if (username == 'admin' && password == '12345') {
+  if (username == 'admin' && password == 'wcnft12345') {
     const file = `${__dirname}/users.csv`;
     if (fs.existsSync(file)) {
       res.download(file);
