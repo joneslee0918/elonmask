@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "build":"yarn; cd front; yarn; yarn build;",
+    "build": "yarn; cd front; yarn; yarn build;",
     "start": "node index.js"
   },
   "author": "",
@@ -21,6 +21,7 @@
     "node-fetch": "^3.3.0",
     "nodemon": "^2.0.20",
     "path": "^0.12.7",
+    "react-router-dom": "^6.8.1",
     "twit": "^2.2.11",
     "url": "^0.11.0"
   }

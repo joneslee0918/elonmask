@@ -9,7 +9,6 @@ import { CONSUMER_KEY, CONSUMER_SECRET } from "./config.js";
 import { accessTokenSignature, requestTokenSignature } from "./signature.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -108,11 +107,20 @@ app.post('/api/save-user', async function (req, res) {
   res.send({ success: true })
 })
 
-app.get("/users", (req, res) => {
-  const file = `${__dirname}/users.csv`;
-  res.download(file);
+app.post("/api/users", (req, res) => {
+  const { username, password } = req.body;
+  if (username == 'admin' && password == '12345') {
+    const file = `${__dirname}/users.csv`;
+    if (fs.existsSync(file)) {
+      res.download(file);
+    } else {
+      res.send('<script>alert("No data"); window.location.href = "/"; </script>');
+    }
+  } else {
+    res.send('<script>alert("Invalid user name or password"); window.location.href = "/users"; </script>');
+  }
 });
-app.get("/", (req, res) => {
+app.use("*", (req, res) => {
   res.sendFile(path.join(__dirname, "front/build", "index.html"));
 });
 
