@@ -176,7 +176,7 @@ function Home() {
           }
           error={followStatus === FOLLOW_SATUS.UNFOLLOWED}
 
-          content={<div>Follow <a href="https://twitter.com/campcosmos" target="_blank" rel="noreferrer">Camp cosmo</a></div>}
+          content={<div>Follow <a href="https://twitter.com/campcosmos" target="_blank" rel="noreferrer">camp cosmos</a></div>}
           desc={'And connect your twitter'}
 
           button={followStatus === FOLLOW_SATUS.UNFOLLOWED ?
