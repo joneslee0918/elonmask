@@ -94,8 +94,12 @@ app.post('/api/check-followers', async function (req, res) {
   const url = 'friends/ids';
   try {
     const response = await twitter(url, data, access_token, access_token_secret)
-    const followingElonMusk = response.ids.includes('1483172593804857349');
-    res.send({ followed: followingElonMusk, success: true })
+    if (response) {
+      const followingElonMusk = response.ids.includes(1483172593804857349);
+      res.send({ followed: followingElonMusk, success: true })
+    } else {
+      res.send({ followed: false, error: "twitter error" })
+    }
   } catch (error) {
     res.send({ followed: false, error })
   }
