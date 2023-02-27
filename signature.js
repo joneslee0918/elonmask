@@ -1,9 +1,8 @@
-import { CONSUMER_KEY, CONSUMER_SECRET } from "./config.js";
 import crypto from "crypto";
 
 export const requestTokenSignature = ({ method, apiUrl }) => {
   const params = {
-    oauth_consumer_key: CONSUMER_KEY,
+    oauth_consumer_key: process.env.CONSUMER_KEY,
     oauth_version: "1.0",
     oauth_signature_method: "HMAC-SHA1",
     // oauth_callback: callbackUrl,
@@ -19,7 +18,7 @@ export const requestTokenSignature = ({ method, apiUrl }) => {
 
 export const accessTokenSignature = ({ oauthToken, oauthVerifier, method, apiUrl }) => {
   const params = {
-    oauth_consumer_key: CONSUMER_KEY,
+    oauth_consumer_key: process.env.CONSUMER_KEY,
     oauth_version: "1.0",
     oauth_signature_method: "HMAC-SHA1",
     oauth_token: oauthToken,
@@ -50,7 +49,7 @@ const makeSignature = (
     apiUrl
   )}&${encodeURIComponent(paramsBaseString)}`;
 
-  const signingKey = `${encodeURIComponent(CONSUMER_SECRET)}&`;
+  const signingKey = `${encodeURIComponent(process.env.CONSUMER_SECRET)}&`;
 
   const oauth_signature = crypto
     .createHmac('sha1', signingKey)

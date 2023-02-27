@@ -1,7 +1,0 @@
-// export const CONSUMER_KEY = 'HBYTFXybFo1l7on7D2d8jio8m';
-// export const CONSUMER_SECRET = 'Z9cTjh7MBdnKSFHfuJ2VG7hTitNpb8U8vBY7N6DyiSaOVRN7mE';
-export const CONSUMER_KEY = 'aNdmYPRUEJ7tbPKgG8x29jZ0Z';
-export const CONSUMER_SECRET = 'tP1bMFldIRVktLDFtLu6M98DOdSJOfwQRHLtnyXV75D2pZUPwB';
-//token:  AAAAAAAAAAAAAAAAAAAAAA0XXgEAAAAAacn9E6ajnTdQz2M%2FeTFM3d3Mj3s%3DINmULJLxKVJF3ED6o6L13yfIGlf98pStgo2AI0mNGb4u3XWC4j
-export const access_token = '1475897024062971905-538gLMZyjMV3lAnluPQXDdPi3YZvkV';
-export const access_token_secret = 'CesnES8zoBEFLuVpO7688UPNyMnYGoj0hjw2y8kBNJw0l';

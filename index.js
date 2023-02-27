@@ -5,10 +5,11 @@ import fs from "fs";
 import fetch from 'node-fetch';
 import path from "path";
 import Twit from 'twit';
-import { CONSUMER_KEY, CONSUMER_SECRET } from "./config.js";
+import * as dotenv from 'dotenv';
 import { accessTokenSignature, requestTokenSignature } from "./signature.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+dotenv.config()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -64,7 +65,7 @@ app.post('/api/access-token', async function (req, res) {
 const twitter = (url, data, access_token, access_token_secret) => {
   return new Promise((resolve, reject) => {
     const T = new Twit({
-      consumer_key: CONSUMER_KEY, consumer_secret: CONSUMER_SECRET, access_token, access_token_secret,
+      consumer_key: process.env.CONSUMER_KEY, consumer_secret: process.env.CONSUMER_SECRET, access_token, access_token_secret,
     });
 
     T.get(url, data, function (err, data, response) {
