@@ -105,6 +105,32 @@ app.post('/api/check-followers', async function (req, res) {
   }
 })
 
+app.post('/api/check-user', async function (req, res) {
+  const { address } = req.body;
+  if (!address) res.send({ exists: false, error: "Empty address" })
+  try {
+    const content = fs.readFileSync("users.csv", 'utf-8')
+      .replace(/\r\n/g, '\n')
+      .split('\n')
+      .map(item => {
+        if (!item) return false;
+        item = item.split(",");
+        if (item.length != 2) return false;
+        if (address.toLowerCase() == item[0].toLowerCase()) return item[1];
+        return false;
+      }).filter(item => item);
+    if (content?.length > 0) {
+      res.send({ exists: true, name: content[0] });
+      return;
+    } else {
+      res.send({ exists: false })
+    }
+  } catch (error) {
+    res.send({ exists: false, error: error.message })
+    return;
+  }
+})
+
 app.post('/api/save-user', async function (req, res) {
   const { address, twitter_name } = req.body;
   fs.appendFileSync("users.csv", `${address},${twitter_name}\n`)

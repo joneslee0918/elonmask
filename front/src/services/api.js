@@ -30,5 +30,8 @@ export const getScreenName = (access_token, access_token_secret) =>
 export const checkFollow = (screen_name, access_token, access_token_secret) =>
     _request('check-followers', METHOD.POST, { screen_name, access_token, access_token_secret })
 
+export const checkUser = (address) =>
+    _request('check-user', METHOD.POST, { address })
+
 export const saveUser = (address, twitter_name) =>
     _request('save-user', METHOD.POST, { address, twitter_name })

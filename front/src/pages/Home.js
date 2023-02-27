@@ -1,8 +1,8 @@
 import { useMetaMask } from "metamask-react";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Web3 from "web3";
 import TwitterLogin from "../components/TwitterLogin.js";
-import { checkFollow, getScreenName, saveUser } from "../services/api";
+import { checkFollow, checkUser, getScreenName, saveUser } from "../services/api";
 import './styles.css';
 
 const FOLLOW_SATUS = {
@@ -11,6 +11,7 @@ const FOLLOW_SATUS = {
   FOLLOW: 1,
   FOLLOWED: 2,
   UNFOLLOWED: 3,
+  CONNECTED: 4
 }
 
 function Home() {
@@ -30,16 +31,42 @@ function Home() {
   }, [account])
 
   useEffect(() => {
-    if (account && signed) setFollowStatus(FOLLOW_SATUS.LOGIN)
-    else setFollowStatus(FOLLOW_SATUS.DISABLE)
+    if (!account || !signed) {
+      setFollowStatus(FOLLOW_SATUS.DISABLE)
+      return;
+    }
+    checkUser(account)
+      .then(res => {
+        if (res.exists) {
+          setTwitterUser(res.name);
+          setFollowStatus(FOLLOW_SATUS.CONNECTED)
+          alert("You are already registered for camp")
+        } else {
+          setFollowStatus(FOLLOW_SATUS.LOGIN)
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        setFollowStatus(FOLLOW_SATUS.LOGIN)
+      })
   }, [account, signed])
+
+  const verifyFolled = useCallback(async () => {
+    if (!twitterUser) return setFollowStatus(FOLLOW_SATUS.LOGIN)
+    if (followStatus === FOLLOW_SATUS.UNFOLLOWED) return setFollowStatus(FOLLOW_SATUS.FOLLOW)
+
+    const response = await checkFollow(twitterUser, oauthToken.oauth_token, oauthToken.oauth_token_secret).catch(console.log)
+    if (response?.success && response.followed) return setFollowStatus(FOLLOW_SATUS.FOLLOWED)
+
+    setFollowStatus(FOLLOW_SATUS.UNFOLLOWED)
+  }, [followStatus, oauthToken, twitterUser])
 
   useEffect(() => {
     if (followStatus !== FOLLOW_SATUS.FOLLOW) return
     if (!oauthToken) return;
     if (!twitterUser) return;
     verifyFolled()
-  }, [oauthToken, twitterUser, followStatus])
+  }, [oauthToken, twitterUser, followStatus, verifyFolled])
 
   const authHandler = async (err, data) => {
     if (err) {
@@ -72,16 +99,6 @@ function Home() {
         console.log(err);
         alert("user save error")
       })
-  }
-  const verifyFolled = async () => {
-    if (!twitterUser) return setFollowStatus(FOLLOW_SATUS.LOGIN)
-    if (followStatus === FOLLOW_SATUS.UNFOLLOWED) return setFollowStatus(FOLLOW_SATUS.FOLLOW)
-    const response = await checkFollow(twitterUser, oauthToken.oauth_token, oauthToken.oauth_token_secret)
-      .catch(console.log)
-    if (response?.success && response.followed) {
-      return setFollowStatus(FOLLOW_SATUS.FOLLOWED)
-    }
-    setFollowStatus(FOLLOW_SATUS.UNFOLLOWED)
   }
 
   const getSigned = () => JSON.parse(window.localStorage.getItem('accounts')) || [];
@@ -152,7 +169,7 @@ function Home() {
     <div className="App">
       {isredirectScreen && <div>Redirecting....</div>}
       <div className={`container ${isredirectScreen ? 'redirecting' : ''}`}>
-        <h3>{status == 'unavailable' ? 'please use a desktop metamask browser' : ''}</h3>
+        <h3>{status === 'unavailable' ? 'please use a desktop metamask browser' : ''}</h3>
         <ActionItem
           icon={'https://www.freenft.xyz/_next/static/media/active.0e50e7a2.svg'}
           title={connected ? signed ? `GM, ${account.slice(0, 4) + '...' + account.slice(account.length - 4, account.length)}` : 'Sign a message' : 'Connect your wallet'}
@@ -177,20 +194,24 @@ function Home() {
           error={followStatus === FOLLOW_SATUS.UNFOLLOWED}
 
           content={<div>Follow <a href="https://twitter.com/campcosmos" target="_blank" rel="noreferrer">camp cosmos</a></div>}
-          desc={'And connect your twitter'}
+          desc={twitterUser ? `Connected @${twitterUser}` : 'And connect your twitter'}
 
-          button={followStatus === FOLLOW_SATUS.UNFOLLOWED ?
-            'You must follow the indicated twitter account(s) TRY AGAIN'
-            :
-            followStatus === FOLLOW_SATUS.FOLLOW ?
-              'Verify'
+          button={
+            followStatus === FOLLOW_SATUS.UNFOLLOWED ?
+              'You must follow the indicated twitter account(s) TRY AGAIN'
               :
-              followStatus === FOLLOW_SATUS.DISABLE ?
-                'Connect & Verify'
+              followStatus === FOLLOW_SATUS.FOLLOW ?
+                'Verify'
                 :
-                ''
+                followStatus === FOLLOW_SATUS.DISABLE ?
+                  'Connect & Verify'
+                  :
+                  followStatus === FOLLOW_SATUS.CONNECTED ?
+                    'You are already registered for camp'
+                    :
+                    ''
           }
-          connected={followStatus === FOLLOW_SATUS.FOLLOWED}
+          connected={followStatus === FOLLOW_SATUS.FOLLOWED || followStatus === FOLLOW_SATUS.CONNECTED}
           actionComponent={followStatus === FOLLOW_SATUS.LOGIN ? () => (
             <TwitterLogin
               className={'action'}
@@ -199,7 +220,7 @@ function Home() {
             />
           ) : null}
           onAction={() => verifyFolled()}
-          disabled={followStatus === FOLLOW_SATUS.DISABLE}
+          disabled={followStatus === FOLLOW_SATUS.DISABLE || followStatus === FOLLOW_SATUS.CONNECTED}
         />
         <div className={`contain ${followStatus !== FOLLOW_SATUS.FOLLOWED ? 'disabled' : ''}`}>
           <div className='action' onClick={onSuccess}>
